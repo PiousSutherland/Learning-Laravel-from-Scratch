@@ -11,7 +11,7 @@ To quote from the course:
 
 To do:
 - [x] Initialise (finally :tada:)
-- [ ] \(Optional) Upload db
+- [x] \(Optional) Upload db
 - [ ] Commits as they happen
 
 > [!NOTE]
