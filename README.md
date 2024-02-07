@@ -16,5 +16,5 @@ To do:
 
 > [!NOTE]
 > I uploaded after about lesson 20, so there are a lot of "progress commits" skipped.
-
+> I am not actively working on this, as I got another project
 
