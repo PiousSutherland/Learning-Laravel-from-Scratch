@@ -13,15 +13,20 @@ The ***Controller*** will then pass all necessary data to the ***View*** for the
 ----
 
 ## 2. Initial Environment Setup and Composer
-### 3 prerequisites: editor, terminal and tools needed for project (MySQL, PHP, Composer etc.)
+#### 3 prerequisites: editor, terminal and tools needed for project (MySQL, PHP, Composer etc.)
 Laravel documentation was mentioned, but mostly focused on Mac desktops: [Brew](https://brew.sh) and [Sail](https://laravel.com/docs/10.x#sail-on-macos).
 [Docker](https://www.docker.com/products/docker-desktop/) was mentioned as well.
 [Composer](https://getcomposer.org) was installed + composer.phar installed globally. (On Windows, run:
 > where composer.phar
+
 and it should show, even if you are in your C:\Users\{user} home directory)
+
 > composer create-project laravel/laravel app-name
+
 to start new project.
+
 > php artisan serve
+
 in you project directory to host locally.
 
 ----
@@ -42,15 +47,60 @@ Add the directory there and save without changing anything else
 > ...we learn tools because they help us accomplish something or they help us solve a particular problem you have.
 The problem for this lecture series is creating a functional blog
 
+----
+
 ## 5. How a Route Loads a View
 Explanation of the web.php file and how routes and views work.
 > Routes::get('/api-example', function{
 > 	return ['foo' => 'bar'];
 > });
 
+----
 
 ## 6. Include CSS and JavaScript
 Edited welcome.blade.php in 'resources/views' with basic HTML and mentioned CSS+JS needing to be created in the 'public/' dir.
 
+----
+
 ## 7. Make a Route and Link to it
 Changed the name for the '/' view. Made a static posts page.
+
+----
+
+## 8. Store Blog Posts as HTML Files
+Showed that extracting html into the 'resources/posts/' can be loaded dynamically using a slug like:
+> Route::get('/post/{post}', function ($slug) {
+    $post = file_get_contents(__DIR__ . "/../resources/posts/$slug.html");
+
+    return view('post', [
+        'post' => $post
+    ]);
+});
+
+This means a blog writer can put their blogposts onto a file on something like GitHub if they wanted it to be open-source.
+Furthermore, some extra route handling covered:
+> abort(404);
+return redirect('/');
+
+----
+
+## 9. Route Wildcard Constraints
+At the end of the 
+> Route::get('/path/to', function{
+	return "Something";
+})
+
+for some extra constraints / validity checks there can now be added:
+> ->where($variable, '[RegExHere]+');
+
+For alpha[numeric]:
+> whereAlpha[Numeric]()
+
+----
+
+## 10. Use Caching for Expensive Operations
+Caching can be done by ***adding:
+> $post = ***cache()->remember("posts.$slug", 5 /* seconds */, fn () =>*** file_get_contents($path)***)***;
+
+----
+
