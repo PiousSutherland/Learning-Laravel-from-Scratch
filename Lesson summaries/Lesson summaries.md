@@ -12,7 +12,7 @@ The ***Controller*** will then pass all necessary data to the ***View*** for the
 
 ----
 
-## 1. Initial Environment Setup and Composer
+## 2. Initial Environment Setup and Composer
 ### 3 prerequisites: editor, terminal and tools needed for project (MySQL, PHP, Composer etc.)
 Laravel documentation was mentioned, but mostly focused on Mac desktops: [Brew](https://brew.sh) and [Sail](https://laravel.com/docs/10.x#sail-on-macos).
 [Docker](https://www.docker.com/products/docker-desktop/) was mentioned as well.
@@ -26,7 +26,7 @@ in you project directory to host locally.
 
 ----
 
-## 1. The Laravel Installer Tool
+## 3. The Laravel Installer Tool
 > composer global require laravel/installer
 To allow you to run
 > laravel new app-name
@@ -38,8 +38,19 @@ Add the directory there and save without changing anything else
 
 ----
 
-## 1. Why do We Use Tools?
+## 4. Why do We Use Tools?
 > ...we learn tools because they help us accomplish something or they help us solve a particular problem you have.
 The problem for this lecture series is creating a functional blog
 
-## 1.
+## 5. How a Route Loads a View
+Explanation of the web.php file and how routes and views work.
+> Routes::get('/api-example', function{
+> 	return ['foo' => 'bar'];
+> });
+
+
+## 6. Include CSS and JavaScript
+Edited welcome.blade.php in 'resources/views' with basic HTML and mentioned CSS+JS needing to be created in the 'public/' dir.
+
+## 7. Make a Route and Link to it
+Changed the name for the '/' view. Made a static posts page.
