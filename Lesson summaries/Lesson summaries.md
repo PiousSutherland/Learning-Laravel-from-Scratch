@@ -232,3 +232,53 @@ If you want some more control without changing your code:
 ----
 
 ## III. Blade
+
+### 14. Blade: The Absolute Basics
+```blade
+{{ Display with htmlspecialchars }}
+{!! Display without htmlspecialchars !!}
+@foreach ($posts as $post) @endforeach
+@dd($var) // <?php dd($var); ?>
+<article class="{{ $loop->even ? 'mb-4' : '' }}"> // $loop variable
+@if (true) @endif
+@unless @endunless
+```
+
+Inside storage\framework\views, you'll find the compiled versions of your views.
+
+----
+
+### 15. Blade Layouts Two Ways
+* Option 1: @extends, @yield
+```blade
+{{-- layout.blade.php --}}
+<link rel="stylesheet" href="/css/app.css">
+<body>
+	@yield('name')
+</body>
+```
+```blade
+{{-- example.blade.php --}}
+@extends('layout')
+@section('name')
+	{{-- Add new code here --}}
+@endsection
+````
+
+* Option 2: Components
+```blade
+{{-- components/layout.blade.php --}}
+<link rel="stylesheet" href="/css/app.css">
+<body>
+	{{ $content }}
+	{{-- Alternatively, $slot is used if it's only a variable or text being 'slotted' into it. --}}
+</body>
+```
+```blade
+{{-- example.blade.php --}}
+<x-layout>
+    <x-slot name="content">
+		{{-- Add new code here --}}
+    </x-slot>
+</x-layout>
+````

@@ -46,4 +46,9 @@ class Post /* extends Model */
     {
         return static::all()->firstWhere('slug', $slug);
     }
+    public static function findOrFail($slug)
+    {
+        return static::find($slug) ?? throw new ModelNotFoundException();
+
+    }
 }
