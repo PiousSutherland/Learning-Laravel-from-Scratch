@@ -47,6 +47,7 @@ Add the directory there and save without changing anything else
 The problem for this lecture series is creating a functional blog
 
 ----
+----
 
 ## II. The Basics
 
@@ -121,7 +122,7 @@ For ease of reading, the web.php has the following keywords:
 	]);
 
 Now it reads: "Find a Post and Return it to the View"
-The caching and file_exists() check is now inside the Post model, in a find() function.
+The caching and `file_exists()` check is now inside the Post model, in a `find()` function.
 * Path shothands were mentioned; app_path(), base_path(), resource_path() etc.
 * The find() in App\Models\Post is not responsible for redirects.
 Instead, throw new ModelNotFoundException();
@@ -230,6 +231,7 @@ If you want some more control without changing your code:
 * Potential homework: Service Providers
 
 ----
+----
 
 ## III. Blade
 
@@ -281,4 +283,78 @@ Inside storage\framework\views, you'll find the compiled versions of your views.
 		{{-- Add new code here --}}
     </x-slot>
 </x-layout>
-````
+```
+
+----
+
+### 16. A Few Tweaks and Considerations
+* Added `findOrFail()` method
+* 
+
+----
+----
+
+## IV. Working with Databases
+
+### 17. Environment Files and Database Connections
+* .env file is private / sensitive info
+* `php artisan migrate` starts the table migrations
+* GUIs like TablePlus help visualise the data
+* The necessary values are usually read by the various files in the '/config' directory.
+> [!NOTE]
+> [Many config files are no more in Laravel 11.]
+
+----
+
+### 18. Migrations: The Absolute Basics
+* `php artisan migrate` uses the database/migrations directory
+* `up()` runs the migration (ie, creates tables) and `down()` reverses it
+The code for making a table is easy to understand:
+```
+function (Blueprint $table) {
+	$table->id();
+	$table->string('name');
+	$table->string('email')->unique();
+	$table->timestamp('email_verified_at')->nullable();
+	$table->string('password');
+	$table->rememberToken();
+	$table->timestamps();
+}
+```
+
+The `migrations` table has a 'batch' record that specifies the rollback-hierarchy in __descending__	 order.
+* `php artisan migrate:fresh` deletes everything and migrates again
+	* This will not practically be used in production
+	* `APP_ENV` can be set to production to try to prevent this
+	
+----
+
+### 19. Eloquent and the Active Record Pattern
+Per Wikipedia:
+> The active record pattern is an approach to accessing data in a database. 
+A database table or view is wrapped into a class. Thus, an object instance is tied to a single row in the table. 
+After creation of an object, a new row is added to the table upon save.
+
+* Each table can have a corresponding Eloquent model
+You can use `php artisan tinker`:
+```
+$user = new App\Models\User;
+$user->name = 'Someone';
+$user->email = 'name@example.com;
+$user->password = bcrypt('password');
+
+$user->save();
+
+User::find(1); // id
+User::findOrFail(1);
+User::all();
+// Here you can add changes and update
+
+$user = new App\Models\User;
+
+// Here you can't
+
+$users = User::all();
+$users->pluck('name'); // Returns object with only specified records
+$users->first(); // OR $users[0]
+```
