@@ -7,7 +7,7 @@
                         {{ $post->title }}
                     </a>
                 </h1>
-                <a href="/category/{{ $post->category->slug }}">
+                <a href="/categories/{{ $post->category->slug }}">
                     Show {{ $post->category->name }} posts
                 </a>
                 <div>

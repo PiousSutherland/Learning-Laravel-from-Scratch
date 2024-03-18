@@ -400,7 +400,7 @@ Temp::create(['attribute' => 'Something'])
 
 The above wants you to add 'attribute' to a fillable property:
 ```php
-namespace App\Models\Temp
+namespace App\Models\Temp;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -466,3 +466,109 @@ Now you can access it using normal attribute accessing.
 ----
 
 ### 25. Show All Posts Associated With a Category
+
+Route handling:
+```php
+// web.php
+Route::get('/categories/{category:slug}', function (Category $category) {
+    return view('posts', [
+        'posts' => $category->posts
+    ]);
+});
+```
+
+Model logic:
+```php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+
+class Category extends Model
+{
+    use HasFactory;
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
+
+Linking on posts[s].blade.php:
+```blade
+<a href="/categories/{{ $post->category->slug }}">
+	Show {{ $post->category->name }} posts
+</a>
+```
+
+----
+
+### 26. Clockwork, and the N+1 Problem
+
+Inside the loop, you're accessing a relationship that has not yet been loaded:
+```blade
+ @foreach ($posts as $post)
+	<a href="/categories/{{ $post->category->slug }}">
+		Show {{ $post->category->name }} posts
+	</a>
+@endforeach
+```
+
+Meaning, you run an additional SQL query for each item in the loop.
+To prove this:
+```php
+\Illuminate\Support\Facades\DB::listen(function ($query) {
+	logger($query->sql);
+});
+```
+
+Returns this on the log:
+> [2024-03-18 11:32:05] local.DEBUG: select * from `posts`  
+[2024-03-18 11:32:05] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1  
+[2024-03-18 11:32:05] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1  
+[2024-03-18 11:32:05] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1  
+[2024-03-18 11:32:05] local.DEBUG: update `sessions` set `payload` = ?, `last_activity` = ?, `user_id` = ?, `ip_address` = ?, `user_agent` = ? where `id` = ?  
+
+Alternatively, install [Clockwork](https://github.com/itsgoingd/clockwork) for a tab in DevTools.
+
+You can change the 'lazy load':
+```php
+'posts' => Post::all()
+```
+
+To:
+```php
+'posts' => Post::with('category')->get()
+```
+
+It will load the relationship as well.
+
+----
+
+### 27. Database Seeding Saves Time
+
+```php
+// Truncate to avoid seeding dupes
+ User::truncate();
+Category::truncate();
+Post::truncate();
+
+$user = User::factory()->create();
+
+$personal = Category::create([
+	'name' => 'Personal', 
+	'slug' => 'personal'
+]);
+
+// You can access attributes for IDs
+Post::create([
+	'user_id' => $user->id,
+	'category_id' => $personal->id,
+	'title' => 'My Family Post',
+	'slug' => 'my-family-post',
+	'excerpt' => 'Lorem ipsum dolor sit amet.',
+	'body' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, totam voluptas. Impedit dignissimos id nobis ipsam sint, tempore, voluptates facilis soluta error deserunt aspernatur recusandae ipsum reiciendis odio numquam molestiae?'
+]);
+```
+
+----
+
+### 28. Turbo Boost With Factories
