@@ -358,3 +358,111 @@ $users = User::all();
 $users->pluck('name'); // Returns object with only specified records
 $users->first(); // OR $users[0]
 ```
+
+----
+
+### 20. Make a Post Model and migration
+
+```bash
+php artisan make:migration create_{names}_table
+php artisan make:model {Name}
+
+php artisan tinker
+```
+
+Inside tinker:
+```bash
+$name = new [App\Models\]{Name}
+$name->attribute = 'add here'
+$name->oops = 'Can't add to DB; attribute doesn't exist';
+unset($name->oops);
+
+$name->save()
+```
+
+----
+
+### 21. Eloquent Updates and HTML Escaping
+```bash
+$temp = App\Models\Temp::find({id});
+$temp->attribute = "Add or change" . $temp->attribute
+$temp->save()
+```
+
+----
+
+### 22. 3 Ways to Mitigate Mass Assignment Vulnerabilities
+
+This throws a MassAssignmentException:
+```bash
+Temp::create(['attribute' => 'Something'])
+```
+
+The above wants you to add 'attribute' to a fillable property:
+```php
+namespace App\Models\Temp
+
+use Illuminate\Database\Eloquent\Model;
+
+class Temp extends Model
+{
+	use HasFactory;
+	protected $guarded = []; // Just this signals to expert programmers that things should never be mass-assigned
+	// Meaning, never take an array or something and then mass assign it
+	
+	protected $fillable = [ 'attribute' ]; // Now Mass Assignment is possible if you explicitly declare like this
+}
+```
+
+To change the instance to the original, before save():
+```
+$temp->fresh()
+```
+
+You can also update a specific instance as follows:
+```
+$temp->update(['attribute' => 'Change val'])
+```
+
+----
+
+### 23. Route Model Binding
+
+```php
+Route::get('/post/{post/*:attribute*/}', function (Post $post) {
+    return view('post', [
+        'post' => $post
+    ]);
+});
+```
+
+Alternatively, you can do this in the Model:
+```
+class getRouteKeyName(){
+	return 'attibute';
+}
+```
+
+Now, use Route::get('/post/{post}'){};
+
+----
+
+### 24. Your First Eloquent Relationship
+```php
+class Post extends Post
+{
+	public function category()
+	{
+		return $this->belongsTo(Category::class);
+	}
+}
+```
+
+In tinker, to run the function:
+> $post = Post::find(1)->category
+
+Now you can access it using normal attribute accessing.
+
+----
+
+### 25. Show All Posts Associated With a Category

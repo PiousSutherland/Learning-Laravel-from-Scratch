@@ -7,8 +7,11 @@
                         {{ $post->title }}
                     </a>
                 </h1>
+                <a href="/category/{{ $post->category->slug }}">
+                    Show {{ $post->category->name }} posts
+                </a>
                 <div>
-                    {!! $post->excerpt !!}
+                    <p>{{ $post->excerpt }}</p>
                 </div>
             </article>
         @endforeach
