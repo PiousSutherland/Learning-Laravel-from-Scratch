@@ -609,7 +609,7 @@ Post::factory(5)->create([
 
 ----
 
-#### 29. View All Posts by an Author
+### 29. View All Posts by an Author
 
 ```php
 // web.php
@@ -653,3 +653,37 @@ App\Models\ModelName::without('parent_table')->get();
 ----
 
 ## V. Integrate the Design
+
+### 31. Convert the HTML and CSS to Blade
+Downloaded [core from GitHub](https://github.com/laracasts/Laravel-From-Scratch-HTML-CSS)
+Basically moved things around so it's easier to read.
+
+----
+
+### 32. 
+To pass a variable through, you can do this:
+```blade
+<x-post-featured-card :post="$post"/>
+```
+
+> Default timestamps are instances of class+library "Carbon"
+
+Example:
+```blade
+Published {{ $post->created_at->diffForHumans() }}
+{{-- Published 2 hours ago (in my case)--}}
+```
+
+For loops, you can skip:
+```blade
+@foreach ($posts->skip(1) as $post) @endforeach
+```
+
+Extra:
+```blade
+{{-- Main view example --}}
+<x-post-card :post="$post" class="bg-red-500"/>
+
+{{-- Incorporate on component / prop --}}
+<a{{ $attributes->merge(['class' => 'hover:bg-gray-100 border border-black']) }}></a>
+```
