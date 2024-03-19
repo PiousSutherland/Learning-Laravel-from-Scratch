@@ -15,7 +15,7 @@ The ***Controller*** will then pass all necessary data to the ***View*** for the
 ----
 
 ### 2. Initial Environment Setup and Composer
-##### 3 prerequisites: editor, terminal and tools needed for project (MySQL, PHP, Composer etc.)
+**3 prerequisites: editor, terminal and tools needed for project (MySQL, PHP, Composer etc.)**
 Laravel documentation was mentioned, but mostly focused on Mac desktops: [Brew](https://brew.sh) and [Sail](https://laravel.com/docs/10.x#sail-on-macos).
 [Docker](https://www.docker.com/products/docker-desktop/) was mentioned as well.
 [Composer](https://getcomposer.org) was installed + composer.phar installed globally. (On Windows, run:
@@ -572,3 +572,84 @@ Post::create([
 ----
 
 ### 28. Turbo Boost With Factories
+
+To add migration, factory and seeder:
+> php artisan make:model -mfs
+
+This:
+> $this->faker
+
+is the same as this:
+> fake()
+
+Simplest way to 
+```php
+public function definition(): array
+{
+	return [
+		'other_model_id' => \App\Models\ModelName::factory(), // Choose
+		'title' => fake()->title(),
+		'slug' => fake()->unique()->slug(),
+		'excerpt' => fake()->sentence(),
+		'body' => fake()->paragraph() // etc.
+	];
+}
+```
+
+Override certain randomised data:
+```php
+$user = User::factory()->create([
+	'name' => 'John Doe'
+]);
+
+Post::factory(5)->create([
+	'user_id' => $user->id
+]);
+```
+
+----
+
+#### 29. View All Posts by an Author
+
+```php
+// web.php
+// latest() orders by; column name can be specified
+'posts' => Post::latest()->with('category')->get()
+```
+
+```php
+// Specify foreign key
+public function author() // Laravel assumes author_id
+{
+	return $this->belongsTo(User::class, 'user_id');
+}
+```
+
+----
+
+### 30. Eager Load Relationships on an Existing Model
+
+```php
+// Eager-load by default in any model
+$with = ['parent_table', 'subtable'];
+
+// `id` fields are foreign keys in DB
+function parent_table()
+{
+	return $this->belongsTo(ParentModel::class, 'id');
+}
+function subtable()
+{
+	return $this->hasMany(ChildModel::class, 'id');
+}
+```
+
+Disabling for a single query:
+```php
+App\Models\ModelName::without('parent_table')->get();
+```
+
+----
+----
+
+## V. Integrate the Design

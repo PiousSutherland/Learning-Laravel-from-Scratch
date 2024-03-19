@@ -6,7 +6,7 @@
             </h1>
             <p>
                 By
-                <a href="/users/{{ $post->user->id }}">{{ $post->user->name }}</a>
+                <a href="/authors/{{ $post->author->username }}">{{ $post->author->name }}</a>
                 in
                 <a href="/categories/{{ $post->category->slug }}">
                     {{ $post->category->name }}
@@ -16,7 +16,9 @@
                 <p>{{ $post->date }}</p>
             </div>
             <div>
-                {!! $post->body !!}
+                <p>
+                    {!! $post->body !!}
+                </p>
             </div>
         </article>
         <a href="/">Go back</a>
