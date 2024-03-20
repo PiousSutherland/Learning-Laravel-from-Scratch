@@ -687,3 +687,49 @@ Extra:
 {{-- Incorporate on component / prop --}}
 <a{{ $attributes->merge(['class' => 'hover:bg-gray-100 border border-black']) }}></a>
 ```
+----
+### 33. Convert the Blog Post Page
+Moved some stuff, added images, incorporated Blade even more.
+----
+
+### 34. A Small JavaScript Dropdown Detour
+Adding AlpineJS to aid with linking to categories.
+Basic styling
+Exmample:
+```HTML
+<div x-data="{ show: false }">
+	<!-- Problem: Longer text shrinks to width 	-->
+	<button @click="show = !show">Text</button>
+
+	<div x-show="show">
+		<a href="#">Much longer text here</a>
+	</div>
+</div>
+
+<!-- Solution: tailwind css class="w-32" or some other number -->
+<!-- @click.away -->
+```
+
+----
+
+### 35. How to Extract a Dropdown Blade Component
+Extracted into components
+
+----
+
+### 36. Quick Tweaks and Clean-Up
+Styling.
+Added '<p></p>' tags to excerpt.
+
+----
+----
+
+## VI. Search
+
+### 37. Search (The Messy Way)
+
+----
+
+### 38. Search (The Cleaner Way)
+
+----
