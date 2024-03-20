@@ -16,13 +16,14 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+        $starting2 = '<p>' . implode('</p><p>', fake()->paragraphs(2)) . '</p>';
         return [
             'user_id' => \App\Models\User::factory(),
             'category_id' => \App\Models\Category::factory(),
             'title' => fake()->sentence(),
             'slug' => fake()->unique()->slug(),
-            'excerpt' => '<p>' . implode('</p><p>', fake()->paragraphs(2)) . '</p>',
-            'body' => '<p>' . implode('</p><p>', fake()->paragraphs(6)) . '</p>'
+            'excerpt' => $starting2,
+            'body' => $starting2 . '<p>' . implode('</p><p>', fake()->paragraphs(4)) . '</p>'
         ];
     }
 }

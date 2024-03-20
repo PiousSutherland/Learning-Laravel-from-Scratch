@@ -728,8 +728,53 @@ Added '<p></p>' tags to excerpt.
 
 ### 37. Search (The Messy Way)
 
+```php
+Route::get('/', function () {
+    $posts = Post::latest();
+
+    if (request('search'))
+        $posts
+            ->where('title', 'like', '%' . request('search') . '%')
+            ->orWhere('body', 'like', '%' . request('search') . '%');
+
+    $try = $posts->get();
+    isset($try) ? $posts = $posts->get() : redirect('/no-results');
+
+    return view('posts', [
+        'posts' => $try,
+        'categories' => Category::all()
+    ]);
+});
+```
 ----
 
 ### 38. Search (The Cleaner Way)
 
+```php
+// Post model
+public function scopeFilter($query, array $filters)
+{
+	$query
+		->when($filters['search'] ?? false, fn ($query, $search) =>
+			$query
+				->where('title', 'like', "%$search%")
+				->orWhere('body', 'like', "%$search%")
+	);
+}
+```
+```php
+// Controller function executed in web.php
+public function index()
+{
+	// dd(request(['search']));
+	return view('posts', [
+		'posts' => Post::latest()->filter(request(['search']))->get(),
+		'categories' => Category::all()
+	]);
+}
+```
+
 ----
+----
+
+### 39. Advanced Eloquent Query Constraints
