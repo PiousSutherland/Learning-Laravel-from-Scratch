@@ -777,6 +777,8 @@ public function index()
 ----
 ----
 
+## VII. Filtering
+
 ### 39. Advanced Eloquent Query Constraints
 What you are trying to emulate:
 ```SQL
@@ -826,10 +828,141 @@ Then in the controller:
 ```php
 public function index()
 {
-	return view('posts', [
+		return view('posts', [
 		'posts' => Post::latest()->filter(request(['search', 'category']))->get(),
 		'categories' => Category::all(),
 		'currentCategory' => Category::firstWhere('slug', request('category'))
 	]);
 }
 ```
+
+----
+
+### 40. Extract a Category Dropdown Blade Component
+Best practice is for 
+```php
+class PostController extends Controller
+{
+    public function index()
+    {
+        // dd(request(['search']));
+        return view('posts.index', [
+            'posts' => Post::latest()->filter(request(['search', 'category']))->get()
+        ]);
+    }
+    public function show(Post $post)
+    {
+        return view('posts.show', [
+            'post' => $post
+        ]);
+    }
+}
+```
+
+----
+
+### 41. Author Filtering
+Add author filtering to the scopeFilter:
+```php
+$query->when(
+	$filters['author'] ?? false,
+	fn ($query, $author) =>
+	$query->whereHas(
+		'author',
+		fn ($query) =>
+		$query->where('username', $author)
+	)
+);
+```
+
+Update the view by adding `author` to the check
+```php
+return view('posts.index', [
+	'posts' => Post::latest()->filter(request(['search', 'category', 'author']))->get()
+]);
+```
+
+----
+
+### 42. Merge Category and Search Queries
+
+```blade
+<x-dropdown-item href="/?category={{ $cat->slug }}&{{ http_build_query(request()->except('category')) }}"
+	:active="request('category') === $cat->slug">
+	{{ ucfirst($cat->name) }}
+</x-dropdown-item>
+```
+
+----
+
+### 43. Fix a Confusing Eloquent Query Bug
+This:
+```php
+public function scopeFilter($query, array $filters)
+{
+	$query->when(
+		$filters['search'] ?? false,
+		fn ($query, $search) =>
+		$query
+			->where('title', 'like', "%$search%")
+			->orWhere('body', 'like', "%$search%")
+	);
+
+	$query->when(
+		$filters['category'] ?? false,
+		fn ($query, $category) =>
+		$query->whereHas(
+			'category',
+			fn ($query) =>
+			$query->where('slug', $category)
+		)
+	);
+
+	$query->when(
+		$filters['author'] ?? false,
+		fn ($query, $author) =>
+		$query->whereHas(
+			'author',
+			fn ($query) =>
+			$query->where('username', $author)
+		)
+	);
+}
+```
+
+Produces this SQL:
+```SQL
+SELECT *
+FROM `posts`
+WHERE (`title` LIKE '%et%' OR `body` LIKE '%et%' AND EXISTS (
+SELECT *
+FROM `categories`
+WHERE `posts`.`category_id` = `categories`.`id` AND `slug` = 'unde-fugiat-praesentium-praesentium-aut-adipisci-ut-omnis-eum'))
+ORDER BY `created_at` DESC
+```
+
+Problem with this is the (title OR body and `EXISTS()`) are grouped as opposed to being separate queries.
+
+To fix this, the first part is like this
+```php
+$query
+	->when(
+		$filters['search'] ?? false,
+		fn ($query, $search) =>
+		$query->where(
+			fn ($query) =>
+			$query
+				->where('title', 'like', "%$search%")
+				->orWhere('body', 'like', "%$search%")
+	)
+);
+```
+
+Difference: Everything in the search is now inside a single `where()` method.
+
+----
+----
+
+## VIII. Pagination
+
+### 44. Laughably Simple Pagination
