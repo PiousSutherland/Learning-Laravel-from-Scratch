@@ -778,3 +778,58 @@ public function index()
 ----
 
 ### 39. Advanced Eloquent Query Constraints
+What you are trying to emulate:
+```SQL
+SELECT * FROM `posts`
+WHERE EXISTS (
+	SELECT * FROM `categories`
+	WHERE `categories`.`id` = `posts`.`category_id` AND `categories`.`slug` = 'earum-illum-consequuntur-eligendi-consequatur-aliquam-ullam'
+)
+ORDER BY `created_at` DESC
+)
+```
+
+Here's how it looks in Laravel:
+```php
+public function scopeFilter($query, array $filters)
+{
+	$query->when(
+		$filters['category'] ?? false,
+		fn ($query, $category) =>
+		$query
+			->whereExists(fn ($query) =>
+				$query->from('categories')
+					->whereColumn('categories.id', 'posts.category_id')
+					->where('categories.slug', $category)
+			)
+	);
+}
+```
+
+Even simpler, use whereHas:
+```php
+$query->when(
+	$filters['category'] ?? false,
+	fn ($query, $category) =>
+	$query->whereHas(
+		'category',
+		fn ($query) =>
+		$query->where('slug', $category)
+	)
+);
+
+// This reads like:
+// "Give 
+```
+
+Then in the controller:
+```php
+public function index()
+{
+	return view('posts', [
+		'posts' => Post::latest()->filter(request(['search', 'category']))->get(),
+		'categories' => Category::all(),
+		'currentCategory' => Category::firstWhere('slug', request('category'))
+	]);
+}
+```

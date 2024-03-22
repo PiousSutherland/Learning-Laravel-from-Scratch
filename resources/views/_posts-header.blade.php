@@ -18,7 +18,7 @@
                 <x-dropdown-item href="/" :active="request()->routeIs('home')">All</x-dropdown-item>
 
                 @foreach ($categories as $cat)
-                    <x-dropdown-item href="/categories/{{ $cat->slug }}" :active="request()->is('categories/' . $cat->slug)">
+                    <x-dropdown-item href="/?category={{ $cat->slug }}" :active="request()->is('categories/' . $cat->slug)">
                         {{ ucfirst($cat->name) }}
                     </x-dropdown-item>
                 @endforeach
