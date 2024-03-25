@@ -1112,3 +1112,32 @@ According to Jeffrey Way [at around 2:18](https://laracasts.com/series/laravel-8
 > Just think of it(middleware) as a piece of logic that will run whenever a new request comes in.
 ... You have the opportunity to inspect that request and perform pieces of logic or even redirect the user elsewhere.
 
+----
+
+### 50. Build the Log In Page
+If failed,
+```php
+return back()
+	->withInput()
+	->withErrors(['email' => 'Your provided credentials could not be verified.']);
+```
+Or
+```
+throw ValidationException::withMessage([
+	'email' => 'Your provided credentials could not be verified.'
+]);
+```
+`session()->regenerate();` before logging in prevents session fixation
+
+----
+
+### 51. Laravel Breeze Quick Peek
+
+Check if you have node and npm:
+```
+node -v
+npm -v
+```
+
+```php artisan breeze:install```
+```npm install && npm run dev```
