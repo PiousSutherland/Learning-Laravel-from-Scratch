@@ -12,7 +12,10 @@ class PostController extends Controller
     {
         // dd(request(['search']));
         return view('posts.index', [
-            'posts' => Post::latest()->filter(request(['search', 'category', 'author']))->get()
+            'posts' => Post::latest()->filter(
+                request(['search', 'category', 'author'])
+            )
+                ->paginate()->withQueryString()
         ]);
     }
     public function show(Post $post)

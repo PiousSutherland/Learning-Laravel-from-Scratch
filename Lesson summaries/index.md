@@ -966,3 +966,39 @@ Difference: Everything in the search is now inside a single `where()` method.
 ## VIII. Pagination
 
 ### 44. Laughably Simple Pagination
+Pagination syntax:
+```php
+return view('posts.index', [
+	'posts' => Post::latest()->filter(
+		request(['search', 'category', 'author'])
+	)
+	// Without pagination
+//		->get()
+	// With pagination
+		->paginate(/* How many? Def: 15 */)
+	// Allows for filter-hopping:
+		->withQueryString()
+]);
+```
+
+To get the links, in your Blade view:
+```blade
+{{ $variableInController->links() }}
+```
+
+Then, if you click on a filter add the except to refresh:
+```blade
+href="/?category={{ $cat->slug }}&{{ http_build_query(request()->except('category', 'page')) }}"
+```
+
+`php artisan vendor:publish` is what you need to generate the views that you can edit for styling the links.
+
+In your `App\Providers\AppServiceProvider` file in the 'boot()', you can set `Paginator::use...` for Tailwind/Bootstrap.
+Tailwind is default.
+
+`->simplePaginate()` will not calculate the amount of pages (`<` `1` `2` `3` `4` `5` `>`) but just give `<< Previous` and `<< Next`
+
+----
+----
+
+## IX. Forms and Authentication

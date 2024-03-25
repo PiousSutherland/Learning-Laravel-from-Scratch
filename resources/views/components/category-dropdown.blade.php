@@ -6,10 +6,10 @@
         </button>
     </x-slot>
 
-    <x-dropdown-item href="/" :active="request('category') === null">All</x-dropdown-item>
+    <x-dropdown-item href="/?{{ http_build_query(request()->except('category', 'page')) }}" :active="request('category') === null">All</x-dropdown-item>
 
     @foreach ($categories as $cat)
-        <x-dropdown-item href="/?category={{ $cat->slug }}&{{ http_build_query(request()->except('category')) }}"
+        <x-dropdown-item href="/?category={{ $cat->slug }}&{{ http_build_query(request()->except('category', 'page')) }}"
             :active="request('category') === $cat->slug">
             {{ ucfirst($cat->name) }}
         </x-dropdown-item>
