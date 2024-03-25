@@ -1100,3 +1100,15 @@ Here you can add AlpineJS to a div that shows a success message:
 
 ----
 
+### 49. Login and Logout
+
+In the RegisterController to log a user in, you can add:
+```auth()->login($user);```
+
+In the web.php file, you can add middleware:
+```Route::post('register', [RegisterController::class, 'store'])->middleware('guest');```
+
+According to Jeffrey Way [at around 2:18](https://laracasts.com/series/laravel-8-from-scratch/episodes/49):
+> Just think of it(middleware) as a piece of logic that will run whenever a new request comes in.
+... You have the opportunity to inspect that request and perform pieces of logic or even redirect the user elsewhere.
+
