@@ -216,7 +216,7 @@ public static function all()
 
 ----
 
-### 13: Collection Sorting and Caching Refresher
+### 13. Collection Sorting and Caching Refresher
 ```php
 collect()->sortBy[Desc]();
 cache()->rememberForever('unique.name'); // Needs to be cleared
@@ -1002,3 +1002,50 @@ Tailwind is default.
 ----
 
 ## IX. Forms and Authentication
+
+### 44. Build a Register User Page
+
+Simple register form, `method="POST"`, `action="/register"`
+`@csrf`  generates a hidden input with a session id
+
+Inside web.php
+```php
+Route::post('register', [RegisterController::class, 'store']);
+```
+
+Then in the controller
+```
+public function store()
+{
+	$attributes = request()->validate([
+		'name' => 'required',
+		'username' => 'required',
+		'email' => ['required', 'email'],
+		'password' => 'required|min:7|max:255'
+
+	]);
+
+	User::create($attributes);
+
+	return redirect('/');
+    }
+```
+
+----
+
+## 46. Automatic Password Hashing With Mutators
+
+`bcrypt()` hashes passwords
+
+Check if some value equals hashed value in DB:
+```Illuminate\Support\Facades\Hash::check('text-to-check', App\Models\User::find($id)->password);```
+
+To auto-encrypt:
+```
+public function setPasswordAttribute($password)
+{
+	$this->attributes['password'] = bcrypt($password);
+}
+```
+
+Now it will be fine with the 
