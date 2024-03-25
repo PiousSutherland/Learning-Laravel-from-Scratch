@@ -1033,7 +1033,7 @@ public function store()
 
 ----
 
-## 46. Automatic Password Hashing With Mutators
+### 46. Automatic Password Hashing With Mutators
 
 `bcrypt()` hashes passwords
 
@@ -1048,4 +1048,55 @@ public function setPasswordAttribute($password)
 }
 ```
 
-Now it will be fine with the 
+Now it will be hashed by default.
+
+----
+
+### 47. Failed Validation and Old Input Data
+`value="{{ old('id-here') }}"` can be added to keep the old values upon submission
+
+Validation messages:
+```blade
+@error('email')
+	<p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+@enderror
+```
+
+Alternative way to show errors:
+```
+@if ($errors->any())
+	<ul>
+		@foreach ($errors->all() as $err)
+			<li class="text-red-500 text-xs">{{ $err }}</li>
+		@endforeach
+	</ul>
+@endif
+```
+
+To prevent duplicates from the controller, specify `'unique:table,column`:
+```'username' => 'required|min:3|unique:users,username',```
+Or:
+```'username' => ['required', 'min:3', 'max:255', /* Illumninate\Validation\ */ Rule::unique('users', 'username')],```
+
+----
+
+### 48. Show a Success Flash Message
+Add to the session, but only until next page load.
+`session()->flash('success', 'Your account has been created.');`
+Even better, upon redirect, do `->with()` instead of `session()->flash()`
+
+Here you can add AlpineJS to a div that shows a success message:
+```blade
+@if (session()->has('success'))
+	<div x-data="{ show: true }"
+		x-init="setTimeout(() => show = false, 4000)"
+		x-show="show"
+		class="fixed bg-blue-500 text-white py-2 px-4 rounded-xl bottom-3 right-3 text-sm"
+	>
+		<p>{{ session('success') }}</p>
+	</div>
+@endif
+```
+
+----
+
