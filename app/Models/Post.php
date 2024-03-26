@@ -9,8 +9,6 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     protected $with = ['category', 'author'];
 
     // protected $fillable = ['title']; // Enable mass-assignment

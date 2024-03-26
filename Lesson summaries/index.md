@@ -1176,9 +1176,54 @@ Schema::create(
 ----
 
 ### 54. Make the Comments Section Dynamic
-Created comments model, migration, factory and added to seeder.
+Created comments model, migration, factory and controller and added to seeder.
 Same old, took data from table as collection variables and displayed them using attribute access.
 
 ----
 
 ### 55. Design the Comment Form
+Get logged-in user's id:
+```auth()->id()```
+
+----
+
+### 56. Activate the Comment Form
+The 7 RESTful commands you'll see in controllers:
+`index`, `show`, `create`, `store`, `edit`, `update`, `destroy`
+
+Usually you'd want your controllers' functions to correlate with the above-mentioned.
+If it doesn't quite fit, you might want a different controller.
+
+To unguard all at the model level
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        Model::unguard();
+    }
+}
+```
+
+----
+
+### 57. Some Light Chapter Cleanup
+Sometimes you can just extract a component and `@include()` it __if you do not need to pass variables r make it dynamic__ instead of using a Blade directive
+
+----
+----
+
+## XI. Newsletters and APIs
+
