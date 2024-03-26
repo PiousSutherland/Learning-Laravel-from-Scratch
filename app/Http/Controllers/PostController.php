@@ -24,4 +24,14 @@ class PostController extends Controller
             'post' => $post
         ]);
     }
+
+    public function categorise()
+    {
+        return view('posts.index', [
+            'posts' => Post::latest()->filter(
+                request(['search', 'category', 'author'])
+            )
+                ->paginate()->withQueryString()
+        ]);
+    }
 }

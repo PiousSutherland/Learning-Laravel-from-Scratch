@@ -1141,3 +1141,44 @@ npm -v
 
 ```php artisan breeze:install```
 ```npm install && npm run dev```
+
+You should only pull in Breeze at the **beginning** of the project.
+
+----
+----
+
+## X. Comments
+
+### 52. Write the Markup for a Post Comment
+Basic strucutre to the comments, extracted to `post-comment` component.
+
+
+----
+
+### 53. Table Consistency and Foreign Key Constraints
+IDs are unsigned big integers that auto_increment, so foreign IDs have to be the same datatype.
+```php
+Schema::create(
+	'comments',
+	function (Blueprint $table) {
+		$table->id();
+		$table->foreignId('post_id')->constrained()->cascadeOnDelete();
+		$table->foreignId('user_id')->constrained()->cascadeOnDelete();
+		$table->text('body');
+		$table->timestamps();
+	}
+);
+```
+
+`->constrained` forces the foreign ID to match up with an existing primary key in the table it references.
+`->cascadeOnDelete()` is usually "maintains DB consistency".
+
+----
+
+### 54. Make the Comments Section Dynamic
+Created comments model, migration, factory and added to seeder.
+Same old, took data from table as collection variables and displayed them using attribute access.
+
+----
+
+### 55. Design the Comment Form
