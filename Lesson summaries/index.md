@@ -1227,3 +1227,22 @@ Sometimes you can just extract a component and `@include()` it __if you do not n
 
 ## XI. Newsletters and APIs
 
+### 58. Mailchimp API Tinkering
+[Mailchimp](mailchimp.com)
+* Signed up for free account
+* Generated API key for Mailchimp
+* Added to .env and read it in at config/services.php
+* `config('services.mailchimp')` will fetch the entire value for from services.php
+* Followed the [official documentation](https://mailchimp.com/developer/marketing/guides/quick-start//)
+* `composer require mailchimp/marketing`
+```php
+$mailchimp = new \MailchimpMarketing\ApiClient();
+
+$mailchimp->setConfig([
+	'apiKey' => config('services.mailchimp.api_key'),
+	'server' => 'us18'
+]);
+
+$response = $mailchimp->ping->get();
+print_r($response);
+```
