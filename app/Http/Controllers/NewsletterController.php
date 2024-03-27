@@ -13,7 +13,7 @@ class NewsletterController extends Controller
 
         try {
             $newsletter->subscribe(
-                request('email')
+                removePlussesEmail(request('email'))
             );
         }
         // If email could not be subscribed, show errors and keep the email entered
