@@ -392,7 +392,6 @@ $temp->save()
 ----
 
 ### 22. 3 Ways to Mitigate Mass Assignment Vulnerabilities
-
 This throws a MassAssignmentException:
 ```bash
 Temp::create(['attribute' => 'Something'])
@@ -427,7 +426,6 @@ $temp->update(['attribute' => 'Change val'])
 ----
 
 ### 23. Route Model Binding
-
 ```php
 Route::get('/post/{post/*:attribute*/}', function (Post $post) {
     return view('post', [
@@ -466,7 +464,6 @@ Now you can access it using normal attribute accessing.
 ----
 
 ### 25. Show All Posts Associated With a Category
-
 Route handling:
 ```php
 // web.php
@@ -502,7 +499,6 @@ Linking on posts[s].blade.php:
 ----
 
 ### 26. Clockwork, and the N+1 Problem
-
 Inside the loop, you're accessing a relationship that has not yet been loaded:
 ```blade
  @foreach ($posts as $post)
@@ -544,7 +540,6 @@ It will load the relationship as well.
 ----
 
 ### 27. Database Seeding Saves Time
-
 ```php
 // Truncate to avoid seeding dupes
  User::truncate();
@@ -572,7 +567,6 @@ Post::create([
 ----
 
 ### 28. Turbo Boost With Factories
-
 To add migration, factory and seeder:
 > php artisan make:model -mfs
 
@@ -610,7 +604,6 @@ Post::factory(5)->create([
 ----
 
 ### 29. View All Posts by an Author
-
 ```php
 // web.php
 // latest() orders by; column name can be specified
@@ -628,7 +621,6 @@ public function author() // Laravel assumes author_id
 ----
 
 ### 30. Eager Load Relationships on an Existing Model
-
 ```php
 // Eager-load by default in any model
 $with = ['parent_table', 'subtable'];
@@ -727,7 +719,6 @@ Added '<p></p>' tags to excerpt.
 ## VI. Search
 
 ### 37. Search (The Messy Way)
-
 ```php
 Route::get('/', function () {
     $posts = Post::latest();
@@ -749,7 +740,6 @@ Route::get('/', function () {
 ----
 
 ### 38. Search (The Cleaner Way)
-
 ```php
 // Post model
 public function scopeFilter($query, array $filters)
@@ -885,7 +875,6 @@ return view('posts.index', [
 ----
 
 ### 42. Merge Category and Search Queries
-
 ```blade
 <x-dropdown-item href="/?category={{ $cat->slug }}&{{ http_build_query(request()->except('category')) }}"
 	:active="request('category') === $cat->slug">
@@ -1004,7 +993,6 @@ Tailwind is default.
 ## IX. Forms and Authentication
 
 ### 44. Build a Register User Page
-
 Simple register form, `method="POST"`, `action="/register"`
 `@csrf`  generates a hidden input with a session id
 
@@ -1034,7 +1022,6 @@ public function store()
 ----
 
 ### 46. Automatic Password Hashing With Mutators
-
 `bcrypt()` hashes passwords
 
 Check if some value equals hashed value in DB:
@@ -1101,7 +1088,6 @@ Here you can add AlpineJS to a div that shows a success message:
 ----
 
 ### 49. Login and Logout
-
 In the RegisterController to log a user in, you can add:
 ```auth()->login($user);```
 
@@ -1132,7 +1118,6 @@ throw ValidationException::withMessage([
 ----
 
 ### 51. Laravel Breeze Quick Peek
-
 Check if you have node and npm:
 ```
 node -v
@@ -1244,5 +1229,125 @@ $mailchimp->setConfig([
 ]);
 
 $response = $mailchimp->ping->get();
-print_r($response);
+ddd($response);
 ```
+* Look for what you need on [the documentation](https://mailchimp.com/developer/marketing/api/root/)
+
+----
+
+### 59. Make the Newsletter Form Work
+Straightforward form functionalities.
+
+----
+
+### 60. Extract a Newsletter Service
+You can make an invokable Controller:
+`php artisan make:controller [ThingController] -i`
+Call in the route:
+```php
+Route::post('path', ThingController::class);
+```
+
+The API handling was added under App\Services and was called by the controller by creating a new instance.
+
+As an extra you can add this as a global function:
+```php
+function removePlussesEmail(string $email)
+{
+    // Deconstruct
+    $parts = explode('@', $email);
+
+    // Find '+'
+    $firstPart = $parts[0];
+    $plusIndex = strpos($firstPart, '+');
+
+    // Truncate '+' and everything after it in the username
+    if ($plusIndex)
+        $firstPart = substr($firstPart, 0, $plusIndex);
+
+    // return (new) username@domain
+    return  $firstPart . '@' . (isset($parts[1]) ? $parts[1] : null);
+}
+```
+
+----
+
+### 61. Toy Chests and Contracts
+Service providers, containers and contracts
+
+#### Service Containers
+Service containers work like toychests.
+Laravel will look into the parameters of a function, digging through what you had given.
+Laravel tries to put something in if you didn't.
+If there are no constructors, it will just run `new ClassCalled()`
+If there is a constructor, it will recursively resolve dependencies when applicable.
+
+Example: this
+```
+<?php
+namespace App\Services;
+use MailchimpMarketing\ApiClient;
+class Newsletter
+{
+    public function initMailchimp(): ApiClient
+    {
+        return (new ApiClient())->setConfig([
+            'apiKey' => config('services.mailchimp.api_key'),
+            'server' => 'us18'
+        ]);;
+    }
+}
+```
+can be turned into this
+```
+<?php
+
+namespace App\Services;
+
+use MailchimpMarketing\ApiClient;
+
+class Newsletter
+{
+    public function __construct(protected ApiClient $client){}
+
+    public function initMailchimp(): ApiClient
+    {
+        return $this->client->setConfig([
+            'apiKey' => config('services.mailchimp.api_key'),
+            'server' => 'us18'
+        ]);;
+    }
+}
+```
+
+Now if you do something like this:
+```
+<?php
+
+namespace App\Htpp\Controllers;
+
+class NewsletterController extends Controller
+{
+    public function __invoke(Newsletter $newsletter){}
+}
+```
+Laravel will recursively loook through any dependencies that were not defined and do that.
+
+Using the code above from the Service Provider and considering `ApiClient` has an empty constructor, Laravel will eventually run
+```new Newsletter(new ApiClient));```
+
+The program will fail if there are no values defined for certain variables / datatypes like string and int.
+> Unresolvable dependency resolving \[Parameter #... <required> ... ]] in class ...
+
+#### Service Providers
+Registering Service Providers is done using App\Providers
+For example, in the `register()` function of AppServiceProvider.php you can bind your own like:
+```php
+app()->bind('foo', fn() => 'bar');
+```
+
+You can call it using `resolve('foo')`, `app()->get('foo')` or `$this->app->get('foo')`.
+
+#### Contracts
+An `Interface` was described as a program that enforces subclasses to use functions declared in it.
+This is a 'contract' relationship.

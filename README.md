@@ -4,6 +4,7 @@
 
 > [!IMPORTANT]
 > This was part of the internship at ICTGlobe :+1:
+> If you want to use the newsletter API, you will have to install the [cacert.pem](https://curl.se/docs/caextract.html) and put it in your php.ini config file, then restart.
 
 To quote from the course:
 > In this series, we'll use the common desire for a blog - with categories, tags, comments, email notifications, and more.
