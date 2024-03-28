@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create(['name' => 'John Doe']);
-        User::factory()->create(['name' => 'Jane Doe']);
+        User::factory()->create(['name' => 'Jen Doe']);
         User::factory()->create(['name' => 'Jack Doe']);
-        User::factory()->create(['name' => 'Jenny Doe']);
+        User::factory()->create(['name' => 'Jane Doe']);
+        User::factory()->create(['name' => 'Jewels Doe']);
         User::factory()->create(['name' => 'Jones Doe']);
         User::factory()->create([
             'name' => 'Pious Sutherland',

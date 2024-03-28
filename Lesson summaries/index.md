@@ -1351,3 +1351,22 @@ You can call it using `resolve('foo')`, `app()->get('foo')` or `$this->app->get(
 #### Contracts
 An `Interface` was described as a program that enforces subclasses to use functions declared in it.
 This is a 'contract' relationship.
+
+----
+----
+
+## XII. Admin Section
+
+### 62. Limit Access to Only Admins
+To make something optional:
+```
+auth()->user()?->username;
+```
+
+`php artisan make:middleware AdminsOnly`
+This has to be configured inside `bootstrap\app.php` from Laravel 11:
+```php
+->withMiddleware(function (Middleware $middleware) {
+	$middleware->alias(['admin' => AdminsOnly::class]);
+})
+```
