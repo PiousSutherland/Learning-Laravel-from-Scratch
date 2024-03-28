@@ -1370,3 +1370,7 @@ This has to be configured inside `bootstrap\app.php` from Laravel 11:
 	$middleware->alias(['admin' => AdminsOnly::class]);
 })
 ```
+
+----
+
+### 63. Create the Publish Post Form
