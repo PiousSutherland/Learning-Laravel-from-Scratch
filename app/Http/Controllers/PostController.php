@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -43,7 +42,7 @@ class PostController extends Controller
         $post = new Post($attributes);
 
         // Using setSlugAttribute
-        $post->slug = Str::random(rand(18, 24));
+        $post->slug = $post->title;
 
         // Persist
         $post->save();

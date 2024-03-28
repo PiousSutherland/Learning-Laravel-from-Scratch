@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -47,6 +48,26 @@ class Post extends Model
         );
     }
 
+    public function setSlugAttribute($title)
+    {
+        $slug = Str::slug($title);
+
+        // Check if exists in DB
+        $existingSlug = static::whereSlug($slug)->exists();
+
+        // If the slug exists in DB, add new number to the end
+        if ($existingSlug) {
+            $count = 1;
+            do {
+                $newSlug = $slug . '-' . $count;
+                $count++;
+            } while (static::whereSlug($newSlug)->exists());
+            $this->attributes['slug'] = $newSlug;
+        } else {
+            $this->attributes['slug'] = $slug;
+        }
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -56,7 +77,7 @@ class Post extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
