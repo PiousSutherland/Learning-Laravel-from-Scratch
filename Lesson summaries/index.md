@@ -1178,26 +1178,11 @@ The 7 RESTful commands you'll see in controllers:
 Usually you'd want your controllers' functions to correlate with the above-mentioned.
 If it doesn't quite fit, you might want a different controller.
 
-To unguard all at the model level
+To unguard all at the model level (inside `App\Providers\AppServiceProvider`)
 ```php
-<?php
-
-namespace App\Providers;
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\ServiceProvider;
-
-class AppServiceProvider extends ServiceProvider
+public function boot(): void
 {
-    public function register(): void
-    {
-        //
-    }
-
-    public function boot(): void
-    {
-        Model::unguard();
-    }
+    Model::unguard();
 }
 ```
 
