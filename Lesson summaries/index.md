@@ -289,7 +289,6 @@ Inside storage\framework\views, you'll find the compiled versions of your views.
 
 ### 16. A Few Tweaks and Considerations
 * Added `findOrFail()` method
-* 
 
 ----
 ----
