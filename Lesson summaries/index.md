@@ -1379,3 +1379,29 @@ Extracted components.
 ----
 
 ### 66. Extend the Admin Layout
+
+```
+<x-dropdown>
+    <x-slot name="trigger">
+        <button class="text-xs font-bold uppercase">
+            Welcome, {{ auth()->user()->name }}!
+        </button>
+    </x-slot>
+
+    <x-dropdown-item href="/admin/posts/create" :active="request()->is('admin/posts/create')">
+        New Post
+    </x-dropdown-item>
+    <x-dropdown-item href="#" x-data="{}"
+        @click.prevent="document.querySelector('#logout').submit()">Log Out</x-dropdown-item>
+
+    <form id="logout" action="/logout" method="post" class="hidden">
+        @csrf
+    </form>
+</x-dropdown>
+```
+
+----
+
+### 67. Create a Form to Edit and Delete Posts
+Passed the posts through `AdminPostController` to the `admin/posts` path
+Copied Tailwind code [here](https://laracasts.com/series/laravel-8-from-scratch/episodes/67?reply=27972)

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create(['name' => 'Jen Doe']);
+        User::factory()->create(['name' => 'Jen Doe', 'password' => 'password']);
         User::factory()->create(['name' => 'Jack Doe']);
         User::factory()->create(['name' => 'Jane Doe']);
         User::factory()->create(['name' => 'Jewels Doe']);
@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Pious Sutherland',
             'email' => 'pious.sutherland@ictglobe.com',
             'username' => 'psuth',
-            'password' => 'password'
+            'password' => 'password',
+            'is_admin' => '1'
         ]);
 
         Category::factory(6)->create();
@@ -34,12 +35,12 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 1; $i <= 6; $i++)
             for ($j = 1; $j <= 6; $j++) {
-                Post::factory()->create([
+                $post = Post::factory()->create([
                     'category_id' => $i,
                     'user_id' => $j
                 ]);
 
-                $post_id = Post::latest()->first()->id;
+                $post_id = $post->id;
 
                 for ($k = 0; $k < 3; $k++)
                     Comment::factory()->create([

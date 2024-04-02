@@ -32,12 +32,23 @@
 
             <div class="mt-8 md:mt-0 flex mt-8 items-center">
                 @auth
-                    <span class="text-xs font-bold uppercase">Welcome, {{ auth()->user()->name }}!</span>
+                    <x-dropdown>
+                        <x-slot name="trigger">
+                            <button class="text-xs font-bold uppercase">
+                                Welcome, {{ auth()->user()->name }}!
+                            </button>
+                        </x-slot>
 
-                    <form action="/logout" method="post" class="text-xs font-semibold text-blue-500 ml-6">
-                        @csrf
-                        <button type="submit">Logout</button>
-                    </form>
+                        <x-dropdown-item href="/admin/posts/create" :active="request()->is('admin/posts/create')">
+                            New Post
+                        </x-dropdown-item>
+                        <x-dropdown-item href="#" x-data="{}"
+                            @click.prevent="document.querySelector('#logout').submit()">Log Out</x-dropdown-item>
+
+                        <form id="logout" action="/logout" method="post" class="hidden">
+                            @csrf
+                        </form>
+                    </x-dropdown>
                 @else
                     <a href="/register" class="text-xs font-bold uppercase">Register</a>
                     <a href="/login" class="text-xs font-bold uppercase ml-3">Login</a>
@@ -77,7 +88,8 @@
                             </div>
                         </div>
                         <button type="submit"
-                            class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8">
+                            class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 
+                            lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8">
                             Subscribe
                         </button>
                     </form>

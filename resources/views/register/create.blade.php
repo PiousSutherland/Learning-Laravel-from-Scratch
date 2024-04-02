@@ -1,58 +1,19 @@
 <x-layout>
     <section class="px-6 py8">
-        <main class="max-w-lg mx-auto mt-10 bg-gray-200 border border-gray-300 p-6 rounded-xl">
-            <h1 class="text-center font-bold text-xl mb-4">Register</h1>
-            <form action="/register" method="post">
-                @csrf
-                <div class="mb-6">
-                    <label for="name" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                        Name
-                    </label>
-                    <input type="text" class="border border-gray-400 p-2 w-full" name="name" id="name" required
-                        value="{{ old('name') }}">
-                    @error('name')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="mb-6">
-                    <label for="username" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                        Username
-                    </label>
+        <main class="max-w-lg mx-auto mt-10">
+            <x-panel>
+                <h1 class="text-center font-bold text-xl mb-4">Register</h1>
+                <form action="/register" method="post">
+                    @csrf
 
-                    <input type="text" name="username" id="username" class="border border-gray-400 p-2 w-full"
-                        required value="{{ old('username') }}">
-                    @error('username')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="mb-6">
-                    <label for="email" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                        Email
-                    </label>
+                    <x-form.input name="name" />
+                    <x-form.input name="username" />
+                    <x-form.input name="email" autocomplete="username" />
+                    <x-form.input name="password" type="password" autocomplete="new-password" />
 
-                    <input type="email" name="email" id="email" class="border border-gray-400 p-2 w-full"
-                        required value="{{ old('email') }}">
-                    @error('email')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="mb-6">
-                    <label for="password" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                        Password
-                    </label>
-
-                    <input type="password" name="password" id="password" class="border border-gray-400 p-2 w-full"
-                        required>
-                    @error('password')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="mb-6">
-                    <button type="submit" class="bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500">
-                        Submit
-                    </button>
-                </div>
-            </form>
+                    <x-form.button>Sign up</x-form.button>
+                </form>
+            </x-panel>
         </main>
     </section>
 </x-layout>
