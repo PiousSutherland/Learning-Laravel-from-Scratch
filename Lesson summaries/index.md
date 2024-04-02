@@ -1358,3 +1358,24 @@ This has to be configured inside `bootstrap\app.php` from Laravel 11:
 ----
 
 ### 63. Create the Publish Post Form
+Basic form. Uses `admin` middleware.
+
+----
+
+### 64. Validate and Store Post Thumbnails
+If a file-type input is used, ```enctype="multipart/form-data"``` needs to be added to the form.
+
+`Illuminate\Http\UploadedFiles` is used to interact with files using, in part, the `config\filesystems.php` file.
+By default, it's stored in the `storage\app` directory, but this can be changed in `filesystems.php`.
+
+`php artisan storage:link` will move your folders from `storage\app\public` to just `public\storage`
+The `asset()` function will use the full path as opposed to the relative path.
+
+----
+
+### 65. Extract Form-Specific Blade Components
+Extracted components.
+
+----
+
+### 66. Extend the Admin Layout

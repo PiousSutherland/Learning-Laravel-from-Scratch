@@ -1,41 +1,16 @@
 <x-layout>
-    <div class="px-6 py-8">
-        <x-panel class="max-w-sm mx-auto">
-            <form action="/admin/posts" method="post">
+    <div class="max-w-md mx-auto py-8">
+        <h1 class="text-lg font-bold mb-4 ">
+            Publish New Post
+        </h1>
+        <x-panel>
+            <form action="/admin/posts" method="post" enctype="multipart/form-data">
                 @csrf
 
-                <div class="mb-6">
-                    <label for="title" class="block mb-2 uppercase font-bold text-xs text-gray-700">Title</label>
-
-                    <input name="title" id="title" type="text" class="border border-gray-400 p-2 w-full"
-                        value="{{ old('title') }}" required>
-
-                    @error('title')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-6">
-                    <label for="excerpt" class="block mb-2 uppercase font-bold text-xs text-gray-700">Excerpt</label>
-
-                    <textarea name="excerpt" id="excerpt" type="text" class="border border-gray-400 p-2 w-full"
-                        value="{{ old('excerpt') }}" required></textarea>
-
-                    @error('excerpt')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-6">
-                    <label for="body" class="block mb-2 uppercase font-bold text-xs text-gray-700">Body</label>
-
-                    <textarea name="body" id="body" type="text" class="border border-gray-400 p-2 w-full"
-                        value="{{ old('body') }}" required></textarea>
-
-                    @error('body')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-form.input name="title"/>
+                <x-form.input name="thumbnail" type="file"/>
+                <x-form.input name="excerpt" type="textarea"/>
+                <x-form.input name="body" type="textarea"/>
 
                 <div class="mb-6">
                     <label for="category_id"
@@ -49,12 +24,10 @@
                         @endforeach
                     </select>
 
-                    @error('category_id')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-                    @enderror
+                    <x-form.error name="category"></x-form.error>
                 </div>
 
-                <x-submit-button>Publish</x-submit-button>
+                <x-form.button>Publish</x-form.button>
             </form>
         </x-panel>
     </div>
