@@ -9,4 +9,4 @@
 To quote from the course:
 > In this series, we'll use the common desire for a blog - with categories, tags, comments, email notifications, and more.
 
-A breakdown, lesson by lesson, can be found [here](https://github.com/PiousSutherland/Learning-Laravel-from-Scratch/blob/main/Lesson%20summaries/Lesson%20summaries.md)
+A breakdown, lesson by lesson, can be found [here](https://github.com/PiousSutherland/Learning-Laravel-from-Scratch/blob/main/Lesson%20summaries/index.md)
