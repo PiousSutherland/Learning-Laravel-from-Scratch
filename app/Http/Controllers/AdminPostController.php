@@ -21,16 +21,10 @@ class AdminPostController extends Controller
 
     public function store()
     {
-        $attributes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'required|image',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|exists:categories,id'
+        $attributes = array_merge($this->validatePost(), [
+            'user_id' => auth()->id(),
+            'thumbnail' => request()->file('thumbnail')->store('thumbnails')
         ]);
-
-        $attributes['user_id'] = auth()->id();
-        $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
 
         $post = new Post($attributes);
 
@@ -50,14 +44,9 @@ class AdminPostController extends Controller
 
     public function update(Post $post)
     {
-        $attributes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'image',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|exists:categories,id'
-        ]);
-        if (isset($attributes['thumbnail']))
+        $attributes = $this->validatePost();
+
+        if ($attributes['thumbnail'] ?? false)
             $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
 
         $post->update($attributes);
@@ -70,5 +59,18 @@ class AdminPostController extends Controller
         $post->delete();
 
         return back()->with('success', 'Post deleted.');
+    }
+
+    public function validatePost(?Post $post = null)
+    {
+        $post ??= new Post();
+
+        return request()->validate([
+            'title' => 'required',
+            'thumbnail' => $post->exists ? 'image' : 'required|image',
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => 'required|exists:categories,id'
+        ]);
     }
 }

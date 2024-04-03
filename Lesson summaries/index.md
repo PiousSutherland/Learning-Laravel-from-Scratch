@@ -1419,3 +1419,99 @@ Using `{!! old('variable', $variable) !!}` lets the `old()` function default to 
 ----
 
 ### 68. Group and Store Validation Logic
+> My first piece of advice for things like this (trying to avoid duplication as much as possible), is try not to create and wire up 
+miles of misdirection; new files; references and dependencies all for the sake of saving yourself just a little bit of duplication.
+In those cases, have you really improved the code or did you complicate the code?
+
+----
+
+### 69. Authorization
+#### Gate
+In `App\Providers\AppServiceProvider.php`:
+```php
+public function boot(): void
+{
+	Gate::define('admin', fn (User $user) => $user->is_admin == '1');
+}
+```
+
+You can check this with normal Laravel files 2 ways:
+```
+// Returns a boolean based on the Gate check
+request()->user()->can/*not*/('admin');
+
+// An abort_if returning 403
+$this->authorize('admin');
+```
+
+Or, using blade: 
+```blade
+@can('admin')
+	{-- Only admins see this --}
+@endcan
+```
+
+#### Custom Blade directive
+In `App\Providers\AppServiceProvider.php`:
+```php
+public function boot(): void
+{
+	Gate::define('admin', fn (User $user) => $user->is_admin == '1');
+
+	Blade::if('admin', fn () => request()->user()?->can('admin'));
+}
+```
+
+Then in Blade:
+```blade
+@admin
+	{-- Only admins see this --}
+@endadmin
+```
+
+#### Middleware
+Now in `web.php` after defining a `Gate` you can call
+```php
+->middleware('can:admin')
+```
+Or even better, group them using
+```php
+Route::middleware('can:admin')->group(function (){
+	// group here
+});
+```
+
+#### Route Resources
+To shorten the [7 RESTful commands](#56.-activate-the-comment-form), you can instead use
+```
+Route:resource('admin/posts', AdminController::class)->except('show');
+```
+
+----
+----
+
+## XIII. Conclusion
+
+### 70. Goodby and Next Steps
+#### [More ideas](https://github.com/JeffreyWay/Laravel-From-Scratch-Blog-Project)
+1. Add a status column to the posts table to allow for posts that are still in a "draft" state. Only when this status is changed to "published" should they show up in the blog feed.
+1. Update the "Edit Post" page in the admin section to allow for changing the author of a post.
+1. Add an RSS feed that lists all posts in chronological order.
+1. Record/Track and display the "views_count" for each post.
+1. Allow registered users to "follow" certain authors. When they publish a new post, an email should be delivered to all followers.
+1. Allow registered users to "bookmark" certain posts that they enjoyed. Then display their bookmarks in a corresponding settings page.
+1. Add an account page to update your username and upload an avatar for your profile.
+
+Other things to look at
+1. [Queues](https://laravel.com/docs/11.x/queues#main-content)
+1. [Events](https://laravel.com/docs/11.x/events#main-content)
+1. [Compiling assets](https://laravel.com/docs/11.x/mix)
+1. [Advanced Eloquent Relationships](https://laravel.com/docs/11.x/eloquent-relationships#main-content)
+1. [Custom Artisan commands](https://laravel.com/docs/11.x/artisan#writing-commands)
+1. [HTTP Tests](https://laravel.com/docs/11.x/http-tests#main-content)
+1. [Notifications](https://laravel.com/docs/11.x/notifications#main-content)
+1. [API Resources](https://laravel.com/docs/11.x/eloquent-resources#main-content)
+
+----
+----
+----

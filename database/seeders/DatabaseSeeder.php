@@ -40,11 +40,9 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $j
                 ]);
 
-                $post_id = $post->id;
-
                 for ($k = 0; $k < 3; $k++)
                     Comment::factory()->create([
-                        'post_id' => $post_id,
+                        'post_id' => $post->id,
                         'user_id' => $user_ids[array_rand($user_ids)]
                     ]);
             }
