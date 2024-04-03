@@ -24,35 +24,6 @@ class PostController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('admin.posts.create');
-    }
-
-    public function store()
-    {
-        $attributes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'required|image',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|exists:categories,id'
-        ]);
-
-        $attributes['user_id'] = auth()->id();
-        $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
-
-        $post = new Post($attributes);
-
-        // Using setSlugAttribute
-        $post->slug = $post->title;
-
-        // Persist
-        $post->save();
-
-        return redirect("/post/{$post->slug}")->with('success', 'Here\'s the post you just created!');
-    }
-
     public function categorise()
     {
         return view('posts.index', [

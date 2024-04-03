@@ -1,6 +1,6 @@
 @auth
     <x-panel>
-        <form action="/post/{{ $post->slug }}/comments" method="post">
+        <form action="{{ $post->path() }}/comments" method="post">
             @csrf
 
             <header class="flex items-center">

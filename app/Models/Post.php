@@ -82,4 +82,9 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function path(): String
+    {
+        return '/post/' . $this->slug;
+    }
 }

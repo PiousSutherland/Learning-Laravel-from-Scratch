@@ -1404,4 +1404,18 @@ Extracted components.
 
 ### 67. Create a Form to Edit and Delete Posts
 Passed the posts through `AdminPostController` to the `admin/posts` path
+
 Copied Tailwind code [here](https://laracasts.com/series/laravel-8-from-scratch/episodes/67?reply=27972)
+
+Created admin pages for updating and deleting pages ('Dashboard' and 'Update'.
+
+Made the `form.input` component more dynamic.
+
+Using `@method('PATCH')` and `@method('DELETE')` under a form creates hidden inputs that let the server know 
+that the browser wants to `PATCH` or `DELETE`.
+
+Using `{!! old('variable', $variable) !!}` lets the `old()` function default to another value if there's nothing in the cache.
+
+----
+
+### 68. Group and Store Validation Logic

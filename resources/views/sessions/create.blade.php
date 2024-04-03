@@ -7,7 +7,7 @@
                     @csrf
 
                     <x-form.input name="email" autocomplete="username" />
-                    <x-form.input name="password" type="password" autocomplete="new-password" />
+                    <x-form.input name="password" type="password" autocomplete="current-password" />
 
                     <x-form.button>Log in</x-form.button>
                 </form>
