@@ -1,4 +1,5 @@
 # Learning Laravel
+[![alt text](Laravel-8-From-Scratch-Wallpaper.png)](https://laracasts.com/series/laravel-8-from-scratch/)
 ### This is proof I learned Laravel using [this course](https://laracasts.com/series/laravel-8-from-scratch/) by Laracasts[^1]
 [^1]: My account can be found [here](https://laracasts.com/@Capacious_Mind)
 
