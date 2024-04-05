@@ -27,6 +27,11 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($password);
     }
+
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = removePlussesEmail($email);
+    }
     
     public function posts()
     {
